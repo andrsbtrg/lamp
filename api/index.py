@@ -18,10 +18,6 @@ supabase: Client = create_client(url, key)
 
 @app.route("/health")
 def health_check():
-    response = (
-        supabase.table("content").select("name", "likes").eq("name", "test2").execute()
-    )
-    print(response)
     return "ok"
 
 
