@@ -6,7 +6,7 @@ from supabase import create_client, Client
 
 app = Flask(__name__)
 # CORS(app)
-CORS(app, resources={r"/*": {"origins": "https://andrsbtrg.neocities.org"}})
+CORS(app, resources={r"/*": {"origins": "https://andrsbtrg.vercel.app"}})
 
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
