@@ -10,7 +10,8 @@ CORS(app, resources={r"/*": {"origins": "https://andrsbtrg.vercel.app"}})
 
 url = os.environ.get("SUPABASE_URL")
 key = os.environ.get("SUPABASE_KEY")
-if not url or not key:
+base_url = os.environ.get("BASE_URL")
+if not url or not key or not base_url:
     raise Exception("Missing env variables")
 
 supabase: Client = create_client(url, key)
@@ -31,7 +32,9 @@ def likes(post: str):
         likes = 0
     else:
         likes = response.data[0]["likes"]
-    return render_template("likes.html", num_likes=likes, post_name=post)
+    return render_template(
+        "likes.html", num_likes=likes, post_name=post, base_url=base_url
+    )
 
 
 @app.route("/like/<post>", methods=["POST"])
