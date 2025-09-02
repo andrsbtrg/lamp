@@ -1,6 +1,7 @@
 import os
 
-from flask import Flask, g, render_template
+from datetime import datetime
+from flask import Flask, g, render_template, request
 from flask_cors import CORS
 from supabase import Client, create_client
 
@@ -56,3 +57,50 @@ def get_likes(supabase: Client, post: str) -> int:
         supabase.table("content").insert({"name": post, "likes": 0}).execute()
         return 0
     return response.data[0]["likes"]
+
+
+@app.route("/comments/<post>", methods=["GET"])
+def get_comments(post: str):
+    supabase: Client = g.supabase
+    try:
+        response = (
+            supabase.table("comments")
+            .select("id, author, content, created_at")
+            .eq("post", post)
+            .order("id", desc=False)
+            .execute()
+        )
+
+        print(response)
+    except Exception as e:
+        return render_template("error.html", message="Error loading comments")
+
+    return render_template("comments.html", comments=response.data)
+
+
+@app.route("/comments/<post>", methods=["POST"])
+def add_comment(post: str):
+    supabase: Client = g.supabase
+    author = request.form.get("author", "Anonymous").strip()
+    content = request.form.get("content", "").strip()
+
+    if not content:
+        return render_template("error.html", message="Comment cannot be empty."), 400
+
+    try:
+        response = (
+            supabase.table("comments")
+            .insert({"post": post, "author": author, "content": content})
+            .execute()
+        )
+        new_comment = response.data[0]
+    except Exception as e:
+        return render_template("error.html", message=str(e))
+
+    return render_template("comment.html", comment=new_comment)
+
+
+@app.template_filter("format_datetime")
+def format_datetime(value):
+    dt = datetime.fromisoformat(value)
+    return dt.strftime("%b %d, %Y at %I:%M %p")

@@ -1,0 +1,6 @@
+{% if comments %}
+{% for comment in comments %}
+{% include "comment.html" with context %}
+{% endfor %}
+{% else %}
+{% endif %}
