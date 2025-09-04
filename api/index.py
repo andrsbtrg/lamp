@@ -103,4 +103,4 @@ def add_comment(post: str):
 @app.template_filter("format_datetime")
 def format_datetime(value):
     dt = datetime.fromisoformat(value)
-    return dt.strftime("%b %d, %Y at %I:%M %p")
+    return dt.strftime("%H:%M %Y.%m.%d")

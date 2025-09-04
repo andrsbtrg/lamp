@@ -1,5 +1,7 @@
 <div class="comment">
-	<p><strong>{{ comment.author }}</strong>:</p>
-	<p>{{ comment.content }}</p>
-	<time>{{ comment.created_at | format_datetime }}</time>
+	<p class="comment-line">
+		<strong class="comment-author">{{ comment.author }}:</strong>
+		<span class="comment-content">{{ comment.content }}</span>
+	</p>
+	<time class="comment-time">{{ comment.created_at | format_datetime }}</time>
 </div>
